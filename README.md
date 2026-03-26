@@ -1,80 +1,224 @@
-# fastapi-clean-architecture
+# FastAPI Clean Architecture
 
-## description
-Base FastAPI project for applying general RestAPI Application cases.
-![openapi-docs](./doc/images/openapi-docs-v2.png)
+Template base de FastAPI con arquitectura limpia, lista para producción y actualizada a las dependencias modernas.
 
-## concept
-1. Minimal functionality.
-2. Convincing architecture.
-3. Easy to read.
-4. Compatibility.
-5. Versatility.
+> Fork y refactorización de [fastapi-clean-architecture](https://github.com/jujumilk3/fastapi-clean-architecture), adaptado para funcionar con el ecosistema Python actual.
 
-## base models
-1. user
-2. post [user (1 : n) post]
-3. tag [post (n : n) tag]
+![openapi-docs](./doc/images/openapi-docs-v1.png)
 
-## integrated with
-1. Python3.9+
-2. Fastapi 0.78.0
-3. Database
-   1. MySQL5.7+
-   2. Migration with alembic
-   3. pytest with real DB
-   4. Load with two ways (eager, lazy)
-   5. Modeling with schema (1:1, 1:n, n:n)
-4. dependency-injector
-   1. service-repository pattern
-5. JWT authentication
-   1. role separation each endpoint
-6. Deployment
-   1. container environment(k8s, docker)
-   2. raw WAS(Web Application Server)
+---
 
-## commands
-1. db(alembic)
-   1. `alembic upgrade head`: apply every migrations
-   2. `alembic downgrade base`: rollback every migrations
-   3. `alembic revision --autogenerate -m "revision_name"`: create new migration 
-   4. `alembic history`: get alembic revision history
-2. How to migration
-   1. Create or modify models from `app/model/*.py`
-   2. `alembic -x ENV=[dev|stage|prod] revision --autogenerate -m "revision_name"`
-   3. Check auto generated migration file from `app/migrations/versions/*.py`
-   4. `alembic -x ENV=[dev|stage|prod] upgrade head`  
-      If ENV does not exist, it will be applied to the test.
-3. server
-   1. `uvicorn app.main:app --reload`: base
-   2. options
-      1. host: `--host 0.0.0.0`
-      2. port: `--port 8000`
-4. test
-   1. `pytest`: base 
-   2. `pytest --cov=app --cov-report=term-missing`: coverage with stdout
-   3. `pytest --cov=app --cov-report=html`: coverage with html
+## Principios de diseño
 
-## sample env
-```dotenv
-# mysql case
-ENV=dev
-DB=mysql
-DB_USER=root
-DB_PASSWORD=qwer1234
-DB_HOST=localhost
-DB_PORT=3306
+1. **Funcionalidad mínima** — sólo lo esencial, sin sobreingeniería.
+2. **Arquitectura convincente** — separación clara de responsabilidades.
+3. **Fácil de leer** — código limpio, predecible y navegable.
+4. **Compatibilidad** — funciona con las dependencias más recientes.
+5. **Versatilidad** — base extensible para proyectos reales.
 
-# postgres case
-ENV=dev
-DB=postgresql
-DB_USER=gyu
-DB_PASSWORD=
-DB_HOST=localhost
-DB_PORT=5432
+---
+
+## Stack tecnológico
+
+| Categoría | Tecnología |
+|-----------|-----------|
+| Runtime | Python 3.13+ |
+| Framework | FastAPI 0.135+ |
+| ORM | SQLModel + SQLAlchemy 2.0 (async) |
+| Base de datos | PostgreSQL (asyncpg) |
+| Migraciones | Alembic |
+| Inyección de dependencias | dependency-injector |
+| Autenticación | JWT (PyJWT + argon2) |
+| Paginación | fastapi-pagination |
+| Gestor de paquetes | uv |
+| Linter/Formatter | ruff |
+| Tests | pytest + pytest-asyncio |
+| Servidor | Uvicorn / Gunicorn |
+
+---
+
+## Modelos base
+
+- **user** — entidad principal
+
+---
+
+## Estructura del proyecto
+
+```
+.
+├── migrations/              # Migraciones Alembic
+│   └── versions/
+├── src/
+│   ├── api/
+│   │   └── v1/
+│   │       ├── endpoints/   # Routers: auth, user, ...
+│   │       └── routes.py
+│   ├── core/
+│   │   ├── container.py     # Contenedor de DI
+│   │   ├── database.py      # Sesiones async SQLAlchemy
+│   │   ├── dependencies.py  # Guards de autenticación
+│   │   ├── exceptions.py    # Excepciones HTTP tipadas
+│   │   ├── security.py      # JWTBearer
+│   │   └── settings.py      # Config via pydantic-settings
+│   ├── model/               # Modelos SQLModel (tabla)
+│   ├── repository/          # Patrón repositorio (CRUD base + especializaciones)
+│   ├── schema/              # Schemas Pydantic (request/response)
+│   ├── services/            # Lógica de negocio
+│   └── util/                # Utilidades (auth, etc.)
+├── tests/
+│   ├── integration_tests/
+│   ├── unit_tests/
+│   └── test_data/
+├── alembic.ini
+└── pyproject.toml
 ```
 
-## references
-1. [FastAPI official docs](https://fastapi.tiangolo.com/)
-2. [alembic official tutorial](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
-3. [Dependency Injector](https://python-dependency-injector.ets-labs.org/)
+---
+
+## Entorno requerido
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```dotenv
+# PostgreSQL
+ENV=dev
+DB=postgresql
+DB_USER=tu_usuario
+DB_PASSWORD=tu_password
+DB_HOST=localhost
+DB_PORT=5432
+DB_URI_MIGRATIONS=postgresql://tu_usuario:tu_password@localhost:5432/dev-fca
+
+# Auth (opcional, tiene default)
+SECRET_KEY=cambia-esto-en-produccion
+```
+
+> Los nombres de base de datos se resuelven automáticamente según `ENV`:
+> `prod` → `fca`, `stage` → `stage-fca`, `dev` → `dev-fca`, `test` → `test-fca`
+
+---
+
+## Instalación y ejecución
+
+Este proyecto usa [uv](https://github.com/astral-sh/uv) como gestor de paquetes.
+
+```bash
+cd src
+
+# Instalar dependencias
+uv sync --dev
+
+# Levantar el servidor de desarrollo
+uv run uvicorn app.main:app --reload
+
+# Opciones adicionales
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+---
+
+## Base de datos y migraciones (Alembic)
+
+Todos los comandos se ejecutan desde la **raíz del proyecto**.
+
+```bash
+# Aplicar todas las migraciones
+uv run alembic upgrade head
+
+# Revertir todas las migraciones
+uv run alembic downgrade base
+
+# Generar nueva migración a partir de los modelos
+uv run alembic -x ENV=dev revision --autogenerate -m "nombre_de_la_revision"
+
+# Ver historial de revisiones
+uv run alembic history
+```
+
+### Flujo para crear o modificar modelos
+
+1. Crea o edita los modelos en `src/model/*.py`
+2. Genera la migración: `uv run alembic -x ENV=dev revision --autogenerate -m "descripcion"`
+3. Revisa el archivo generado en `migrations/versions/`
+4. Aplica la migración: `uv run alembic -x ENV=dev upgrade head`
+
+> Si no se especifica `ENV`, se aplica al entorno `test`.
+
+---
+
+## Tests
+
+```bash
+cd src
+
+# Instalar dependencias
+uv sync --group dev
+
+# Ejecutar todos los tests
+uv run pytest
+
+# Con reporte de cobertura en consola
+uv run pytest --cov=app --cov-report=term-missing
+
+# Con reporte de cobertura en HTML
+uv run pytest --cov=app --cov-report=html
+```
+
+Los tests de integración usan una base de datos PostgreSQL real. La variable `ENV=test` se establece automáticamente en el `conftest.py` y apunta a la base de datos `test-fca`.
+
+---
+
+## Linting y formateo
+
+```bash
+cd src
+
+# Instalar dependencias
+uv sync --group dev
+
+# Formatear código
+uv run ruff format . --line-length 120
+
+# Revisar y corregir issues
+uv run ruff check . --fix --line-length 120
+```
+
+El pipeline de CI aplica `ruff` automáticamente en cada push a `main` y hace commit de las correcciones.
+
+---
+
+## Autenticación
+
+La autenticación se basa en JWT con roles:
+
+| Endpoint | Acceso |
+|----------|--------|
+| `POST /api/v1/auth/sign-up` | Público |
+| `POST /api/v1/auth/sign-in` | Público |
+| `GET /api/v1/auth/me` | Usuario activo |
+| `GET /api/v1/user` | Superusuario |
+| `POST /api/v1/user` | Superusuario |
+| `PATCH /api/v1/user` | Superusuario |
+| `DELETE /api/v1/user/{id}` | Superusuario |
+
+Los tokens se pasan como `Bearer` en el header `Authorization`.
+
+---
+
+## CI/CD (GitHub Actions)
+
+| Workflow | Trigger | Descripción |
+|----------|---------|-------------|
+| `pytest.yml` | push a `main` | Ejecuta tests contra PostgreSQL real |
+| `formatter.yml` | push a `main` | Aplica `ruff` y hace commit automático de fixes |
+
+---
+
+## Referencias
+
+- [FastAPI — Documentación oficial](https://fastapi.tiangolo.com/)
+- [SQLModel](https://sqlmodel.tiangolo.com/)
+- [Alembic — Tutorial oficial](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
+- [Dependency Injector](https://python-dependency-injector.ets-labs.org/)
+- [uv — Gestor de paquetes](https://github.com/astral-sh/uv)
