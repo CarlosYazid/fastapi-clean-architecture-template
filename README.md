@@ -117,11 +117,13 @@ cd src
 # Instalar dependencias
 uv sync --dev
 
+cd ..
+
 # Levantar el servidor de desarrollo
-uv run uvicorn app.main:app --reload
+uv run uvicorn src.main:app --reload
 
 # Opciones adicionales
-uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uv run uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ---
@@ -164,13 +166,13 @@ cd src
 uv sync --group dev
 
 # Ejecutar todos los tests
-uv run pytest
+uv run pytest -p no:twisted -p no:tornasync ../tests
 
 # Con reporte de cobertura en consola
-uv run pytest --cov=app --cov-report=term-missing
+uv run pytest --cov=app --cov-report=term-missing -p no:twisted -p no:tornasync ../tests
 
 # Con reporte de cobertura en HTML
-uv run pytest --cov=app --cov-report=html
+uv run pytest --cov=app --cov-report=html -p no:twisted -p no:tornasync ../tests
 ```
 
 Los tests de integración usan una base de datos PostgreSQL real. La variable `ENV=test` se establece automáticamente en el `conftest.py` y apunta a la base de datos `test-fca`.
