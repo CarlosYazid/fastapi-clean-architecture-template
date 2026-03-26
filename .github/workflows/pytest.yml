@@ -16,6 +16,8 @@ jobs:
       DB_HOST: localhost
       DB_PORT: 5432
       DB: postgresql
+      DB_URI_SYNC: 'postgresql+psycopg2://test:test@localhost:5432/postgresql'
+      SECRET_KEY: d9S0i3pZEjTJlvAf5fqaGE3kkYn6n
 
     strategy:
       matrix:
