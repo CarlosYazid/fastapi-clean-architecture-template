@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag carlosyazid/fastapi-clean-architecture-template:dev-$(date +%s)
+      run: docker build . --file Dockerfile --tag carlosyazid/fastapi-clean-architecture-template:dev-$(date +%s) --target api-dev
