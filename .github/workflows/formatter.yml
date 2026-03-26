@@ -1,4 +1,4 @@
-name: Apply black & isort
+name: Apply ruff
 
 on:
   push:
@@ -8,25 +8,40 @@ on:
 jobs:
   format:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
-      - name: black and isort
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run ruff
+        working-directory: src
         run: |
-          pip install black isort
-          black . -l 120
-          isort . -l 120 --profile black
+          uv sync --dev
+          uv run ruff format . --line-length 120
+          uv run ruff check . --fix --line-length 120
 
       - name: Check for modified files
-        id: git-check
-        run: echo "modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)" >> $GITHUB_ENV
+        run: |
+          if git diff --quiet; then
+            echo "modified=false" >> $GITHUB_ENV
+          else
+            echo "modified=true" >> $GITHUB_ENV
+          fi
 
       - name: Push changes
         if: env.modified == 'true'
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'noreply@github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git commit -am "Automated fixes"
-          git push
+          git add .
+          git commit -m "Automated fixes"
+          git push origin HEAD:${{ github.ref_name }}
