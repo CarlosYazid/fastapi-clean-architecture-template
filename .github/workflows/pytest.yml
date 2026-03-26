@@ -23,7 +23,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14
+        image: postgres:17
         env:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
@@ -51,5 +51,4 @@ jobs:
         run: uv sync --dev
 
       - name: Run pytest
-        working-directory: src
-        run: uv run pytest
+        run: uv run pytest      
