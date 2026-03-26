@@ -51,4 +51,5 @@ jobs:
         run: uv sync --dev
 
       - name: Run pytest
-        run: uv run pytest      
+        working-directory: src
+        run: uv run pytest ../tests
