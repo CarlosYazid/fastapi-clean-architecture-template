@@ -222,6 +222,7 @@ Los tokens se pasan como `Bearer` en el header `Authorization`.
 |----------|---------|-------------|
 | `pytest.yml` | push a `main` | Ejecuta tests contra PostgreSQL real |
 | `formatter.yml` | push a `main` | Aplica `ruff` y hace commit automático de fixes |
+| `docker-image.yml` | push a `main` | Construye una imagen de docker |
 
 ---
 
