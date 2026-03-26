@@ -1,6 +1,6 @@
 from typing import Any
 
-from repository.abc.contracts import Repository
+from src.repository.abc.contracts import Repository
 
 
 class BaseService:

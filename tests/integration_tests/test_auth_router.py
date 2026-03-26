@@ -1,5 +1,8 @@
-def test_sign_up_and_sign_in(client):
-    response = client.post(
+import pytest
+
+@pytest.mark.asyncio
+async def test_sign_up_and_sign_in(client):
+    response = await client.post(
         "/api/v1/auth/sign-up",
         json={"email": "test", "password": "test", "name": "test"},
     )
@@ -9,7 +12,7 @@ def test_sign_up_and_sign_in(client):
     assert response_json["name"] == "test"
     assert response_json["id"] > 0
 
-    response = client.post(
+    response = await client.post(
         "/api/v1/auth/sign-in",
         json={"email": "test", "password": "test"},
     )

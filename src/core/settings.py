@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     DATE_FORMAT: str = "%Y-%m-%d"
 
     # auth
-    SECRET_KEY: SecretStr = Field(default=SecretStr("change-me"))
+    SECRET_KEY: SecretStr
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=(60 * 24 * 30))
     PWD_CONTEXT: CryptContext = CryptContext(schemes=["argon2"], deprecated="auto")
     ALGORITHM: str = "HS256"
@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_HOST: str
     DB_PORT: str = Field(default="3306")
-    DB_URI_MIGRATIONS: str
+    DB_URI_SYNC: str
     DB_ENGINE: str = DB_ENGINE_MAPPER.get(DB, "postgresql+asyncpg")
     DATABASE_URI: Optional[str] = Field(default=None)
 

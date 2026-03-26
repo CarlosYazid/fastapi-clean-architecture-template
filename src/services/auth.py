@@ -1,10 +1,10 @@
-from core.exceptions import AuthError
-from model.user import User
-from repository.abc import Repository
-from schema.user import UserRead
-from schema.auth import SignIn, SignUp, SignInResponse
-from services.abc import BaseService
-from util.auth import AuthUtils
+from src.core.exceptions import AuthError
+from src.model.user import User
+from src.repository.abc import Repository
+from src.schema.user import UserRead
+from src.schema.auth import SignIn, SignUp, SignInResponse
+from src.services.abc import BaseService
+from src.util.auth import AuthUtils
 
 
 class AuthService(BaseService):
@@ -23,7 +23,7 @@ class AuthService(BaseService):
 
         user_info = UserRead(**user.model_dump())
 
-        access_token, expiration_datetime = AuthUtils.create_access_token(user_info.dict())
+        access_token, expiration_datetime = AuthUtils.create_access_token(user_info.model_dump())
 
         return SignInResponse(
             access_token=access_token,
@@ -33,7 +33,7 @@ class AuthService(BaseService):
 
     async def sign_up(self, user_info: SignUp) -> User:
 
-        user = User(**user_info.dict(exclude_none=True), is_active=True, is_superuser=False)
+        user = User(**user_info.model_dump(exclude_none=True), is_active=True, is_superuser=False)
 
         user.password = AuthUtils.get_password_hash(user_info.password)
 

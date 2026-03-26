@@ -5,8 +5,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select, update, delete
 
-from core.exceptions import DuplicatedError, NotFoundError
-from model.abc.base import BaseModel
+from src.core.exceptions import DuplicatedError, NotFoundError
+from src.model.abc.base import BaseModel
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -34,7 +34,7 @@ class BaseRepository:
 
     async def create(self, schema: T) -> T:
 
-        entity = self.model(**schema.dict())
+        entity = self.model(**schema.model_dump())
 
         try:
             async with self.session_factory() as session:

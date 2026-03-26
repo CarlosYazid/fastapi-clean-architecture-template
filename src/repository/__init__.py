@@ -1,3 +1,3 @@
-from repository.user import UserRepository
+from src.repository.user import UserRepository
 
 __all__ = ["UserRepository"]

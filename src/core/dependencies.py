@@ -2,12 +2,12 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import Depends
 import jwt
 
-from core.container import Container
-from core.exceptions import AuthError
-from core.security import JWTBearer
-from model.user import User
-from services.user import UserService
-from util.auth import AuthUtils
+from src.core.container import Container
+from src.core.exceptions import AuthError
+from src.core.security import JWTBearer
+from src.model.user import User
+from src.services.user import UserService
+from src.util.auth import AuthUtils
 
 
 @inject

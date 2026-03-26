@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from schema.user import UserRead
+from src.schema.user import UserRead
 
 
 class SignBase(BaseModel):

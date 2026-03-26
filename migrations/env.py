@@ -16,7 +16,7 @@ from src.core.settings import get_settings
 config = context.config
 config.set_main_option(
     "sqlalchemy.url",
-    get_settings().DB_URI_MIGRATIONS
+    get_settings().DB_URI_SYNC
 )
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

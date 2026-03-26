@@ -1,4 +1,4 @@
-from services.auth import AuthService
-from services.user import UserService
+from src.services.auth import AuthService
+from src.services.user import UserService
 
 __all__ = ["AuthService", "UserService"]

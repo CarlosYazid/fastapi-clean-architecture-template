@@ -1,7 +1,9 @@
-from app.core.exceptions import NotFoundError
+import pytest
 
+from src.core.exceptions import NotFoundError
 
 # It must raise an error
+@pytest.mark.asyncio
 async def test_container_with_intended_exception(container):
     user_service = container.user_service()
     try:

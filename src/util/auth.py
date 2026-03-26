@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 import jwt
 
-from core.settings import get_settings
+from src.core.settings import get_settings
 
 
 class AuthUtils:

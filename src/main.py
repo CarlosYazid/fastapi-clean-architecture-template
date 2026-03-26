@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from fastapi_pagination import add_pagination
 
-from api.v1 import v1Router
-from core.settings import get_settings
-from core.container import Container
+from src.api.v1 import v1Router
+from src.core.settings import get_settings
+from src.core.container import Container
 
 
 class AppCreator:

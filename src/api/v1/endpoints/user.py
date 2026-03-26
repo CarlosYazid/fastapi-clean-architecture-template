@@ -4,13 +4,13 @@ from fastapi_querybuilder import QueryBuilder
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import apaginate
 
-from core.database import Database
-from core.container import Container
-from core.dependencies import get_current_super_user
-from core.security import JWTBearer
-from model.user import User
-from schema import UserRead, UserUpdate, UserCreate
-from services.user import UserService
+from src.core.database import Database
+from src.core.container import Container
+from src.core.dependencies import get_current_super_user
+from src.core.security import JWTBearer
+from src.model.user import User
+from src.schema import UserRead, UserUpdate, UserCreate
+from src.services.user import UserService
 
 router = APIRouter(prefix="/user", tags=["user"], dependencies=[Depends(JWTBearer())])
 

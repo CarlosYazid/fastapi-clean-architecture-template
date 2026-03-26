@@ -5,9 +5,9 @@ from pydantic import EmailStr
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
 
-from model.user import User
-from core.exceptions import NotFoundError
-from repository.abc import BaseRepository
+from src.model.user import User
+from src.core.exceptions import NotFoundError
+from src.repository.abc import BaseRepository
 
 
 class UserRepository(BaseRepository):

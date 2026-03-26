@@ -1,70 +1,67 @@
 import json
 import os
+from pathlib import Path
 
-import pytest
+import aiofiles
+import pytest_asyncio
+from loguru import logger
+from httpx import AsyncClient, ASGITransport
+from sqlmodel import SQLModel
+from sqlalchemy.ext.asyncio import create_async_engine
 
+from src.core.settings import get_settings
+from src.core.container import Container
+from src.main import AppCreator
+from src.model.user import User
+
+BASE_DIR = Path(__file__).resolve().parent
 os.environ["ENV"] = "test"
 
-if os.getenv("ENV") not in ["test"]:
-    msg = f"ENV is not test, it is {os.getenv('ENV')}"
-    pytest.exit(msg)
-
-from loguru import logger
-from fastapi.testclient import TestClient
-from sqlmodel import SQLModel, create_engine
-
-from app.core.config import configs
-from app.core.container import Container
-from app.main import AppCreator
-from app.model.user import User
-
-def insert_default_data(conn):
+async def insert_default_data(conn):
     
     user_default_data = []
     
-    with open("./tests/test_data/users.json", "r") as user_default_file:
-        user_default_data = json.load(user_default_file)
+    async with aiofiles.open(BASE_DIR / "test_data" / "users.json", "r") as user_default_file:
+        user_default_data = json.loads(await user_default_file.read())
     
-    for user in user_default_data:
-        conn.execute(
-            User.__table__.insert(),
-            {
-                "email": user["email"],
-                "password": user["password"],
-                "name": user["name"],
-                "is_active": user["is_active"],
-                "is_superuser": user["is_superuser"],
-            },
-        )
+    await conn.execute(User.__table__.insert(), user_default_data)
 
-
-def reset_db():
-    engine = create_engine(configs.DATABASE_URI)
+async def reset_db():
+    
+    engine = create_async_engine(get_settings().DATABASE_URI)
+    
     logger.info(engine)
-    with engine.begin() as conn:
-        if "test" in configs.DATABASE_URI:
-            SQLModel.metadata.drop_all(conn)
-            SQLModel.metadata.create_all(conn)
-            insert_default_data(conn)
+
+    async with engine.begin() as conn:
+        if "test" in get_settings().ENV:
+            await conn.run_sync(SQLModel.metadata.drop_all)
+            await conn.run_sync(SQLModel.metadata.create_all)
+            await insert_default_data(conn)
         else:
             raise Exception("Not in test environment")
-    return engine
 
+    await engine.dispose()
 
-@pytest.fixture
-def client():
-    reset_db()
+@pytest_asyncio.fixture(scope="session")
+async def setup_db():
+    await reset_db()
+    yield
+
+@pytest_asyncio.fixture
+async def client(setup_db):
+
     app_creator = AppCreator()
     app = app_creator.app
-    with TestClient(app) as client:
+    
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url='http://test') as client:
         yield client
 
-
-@pytest.fixture
-def container():
+@pytest_asyncio.fixture
+async def container():
     return Container()
 
-
-@pytest.fixture
-def test_name(request):
+@pytest_asyncio.fixture
+async def test_name(request):
     return request.node.name

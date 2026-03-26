@@ -1,18 +1,18 @@
 from dependency_injector import containers, providers
 
-from core.settings import get_settings
-from core.database import Database
-from repository import UserRepository
-from services import AuthService, UserService
-from util.auth import AuthUtils
+from src.core.settings import get_settings
+from src.core.database import Database
+from src.repository import UserRepository
+from src.services import AuthService, UserService
+from src.util.auth import AuthUtils
 
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
-            "api.v1.endpoints.auth",
-            "api.v1.endpoints.user",
-            "core.dependencies",
+            "src.api.v1.endpoints.auth",
+            "src.api.v1.endpoints.user",
+            "src.core.dependencies",
         ]
     )
 

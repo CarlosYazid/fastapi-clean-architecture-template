@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlmodel import Field
 
-from model.abc import BaseModel
+from src.model.abc import BaseModel
 
 
 class User(BaseModel, table=True):
