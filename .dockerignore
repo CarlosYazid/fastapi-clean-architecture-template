@@ -1,0 +1,29 @@
+# Python specific files
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Development/editor files and folders
+.vscode/
+.idea/
+*.log
+coverage.*
+htmlcov/
+.tox/
+
+# Source control
+.git
+.gitignore
+
+# Environment files
+.env
+
+# Build artifacts and distributions
+dist/
+build/
+*.egg-info/
+
+# Docker specific files
+Dockerfile
+docker-compose*.yml

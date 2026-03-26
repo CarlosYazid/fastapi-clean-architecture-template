@@ -34,6 +34,7 @@ Template base de FastAPI con arquitectura limpia, lista para producción y actua
 | Linter/Formatter | ruff |
 | Tests | pytest + pytest-asyncio |
 | Servidor | Uvicorn / Gunicorn |
+| Container | Docker |
 
 ---
 
@@ -101,6 +102,12 @@ SECRET_KEY=cambia-esto-en-produccion
 
 ## Instalación y ejecución
 
+### Docker
+Este proyecto tiene 2 imagenes en [docker hub](https://hub.docker.com/r/carlosyazid/fastapi-clean-architecture-template):
+- **Dev**: `docker pull carlosyazid/fastapi-clean-architecture-template:dev`
+- **Prod**: `docker pull carlosyazid/fastapi-clean-architecture-template:prod`
+
+### Local
 Este proyecto usa [uv](https://github.com/astral-sh/uv) como gestor de paquetes.
 
 ```bash
@@ -222,3 +229,7 @@ Los tokens se pasan como `Bearer` en el header `Authorization`.
 - [Alembic — Tutorial oficial](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
 - [Dependency Injector](https://python-dependency-injector.ets-labs.org/)
 - [uv — Gestor de paquetes](https://github.com/astral-sh/uv)
+- [Uvicorn](https://uvicorn.dev/)
+- [Pytest](https://docs.pytest.org/en/stable/)
+- [Docker](https://docs.docker.com/)
+- [PyJWT](https://pyjwt.readthedocs.io/en/stable/)
