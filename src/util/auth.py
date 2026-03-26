@@ -16,7 +16,9 @@ class AuthUtils:
 
         payload = {"exp": expire, **subject}
         encoded_jwt = jwt.encode(
-            payload, get_settings().SECRET_KEY.get_secret_value(), algorithm=get_settings().ALGORITHM
+            payload,
+            get_settings().SECRET_KEY.get_secret_value(),
+            algorithm=get_settings().ALGORITHM,
         )
         expiration_datetime = expire.strftime(get_settings().DATETIME_FORMAT)
         return encoded_jwt, expiration_datetime
@@ -34,7 +36,9 @@ class AuthUtils:
 
         try:
             decoded_token = jwt.decode(
-                token, get_settings().SECRET_KEY.get_secret_value(), algorithms=get_settings().ALGORITHM
+                token,
+                get_settings().SECRET_KEY.get_secret_value(),
+                algorithms=get_settings().ALGORITHM,
             )
 
             if decoded_token["exp"] >= int(round(datetime.now().timestamp())):

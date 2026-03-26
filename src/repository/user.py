@@ -17,15 +17,12 @@ class UserRepository(BaseRepository):
         super().__init__(session_factory, User)
 
     async def read_by_email(self, email: EmailStr) -> User:
-        
-        async with self.session_factory() as session:
 
-            query = (
-                await session
-                .exec(select(self.model)
-                .where(self.model.email == email))
+        async with self.session_factory() as session:
+            query = await session.exec(
+                select(self.model).where(self.model.email == email)
             )
-            
+
             result = query.first()
 
             if not result:

@@ -14,22 +14,26 @@ from services.user import UserService
 
 router = APIRouter(prefix="/user", tags=["user"], dependencies=[Depends(JWTBearer())])
 
+
 @router.get("", response_model=Page[UserRead])
 @inject
 async def _list(
     query=QueryBuilder(User),
     db: Database = Depends(Provide[Container.db]),
-    _: User = Depends(get_current_super_user)):
-    
+    _: User = Depends(get_current_super_user),
+):
+
     async with db.session() as session:
         return await apaginate(session, query)
+
 
 @router.get("/{user_id}", response_model=UserRead)
 @inject
 async def read(
     user_id: int,
     service: UserService = Depends(Provide[Container.user_service]),
-    _: User = Depends(get_current_super_user)):
+    _: User = Depends(get_current_super_user),
+):
 
     return await service.read(user_id)
 
@@ -39,7 +43,8 @@ async def read(
 async def create(
     user: UserCreate,
     service: UserService = Depends(Provide[Container.user_service]),
-    _: User = Depends(get_current_super_user)):
+    _: User = Depends(get_current_super_user),
+):
 
     return await service.create(user)
 
@@ -49,7 +54,8 @@ async def create(
 async def update(
     user: UserUpdate,
     service: UserService = Depends(Provide[Container.user_service]),
-    _: User = Depends(get_current_super_user)):
+    _: User = Depends(get_current_super_user),
+):
 
     return await service.update(user.id, user)
 

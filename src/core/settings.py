@@ -8,7 +8,6 @@ from passlib.context import CryptContext
 
 
 class Settings(BaseSettings):
-    
     # Base
     API: str = "/api"
     API_V1_STR: str = "/api/v1"
@@ -28,7 +27,7 @@ class Settings(BaseSettings):
     }
 
     PROJECT_ROOT: Path = Path(__file__).resolve().parent.parent.parent
-    
+
     model_config = SettingsConfigDict(
         env_file=(str(PROJECT_ROOT / ".env")),
         env_file_encoding="utf-8",
@@ -56,7 +55,7 @@ class Settings(BaseSettings):
     DB_PORT: str = Field(default="3306")
     DB_URI_MIGRATIONS: str
     DB_ENGINE: str = DB_ENGINE_MAPPER.get(DB, "postgresql+asyncpg")
-    DATABASE_URI: Optional[str] = Field(default=None)    
+    DATABASE_URI: Optional[str] = Field(default=None)
 
     def model_post_init(self, __context) -> None:
 

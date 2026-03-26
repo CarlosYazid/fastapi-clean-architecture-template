@@ -6,4 +6,3 @@ routers = APIRouter(tags=["v1"])
 
 routers.include_router(UserRouter)
 routers.include_router(AuthRouter)
-    

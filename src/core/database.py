@@ -23,7 +23,7 @@ class Database:
             try:
                 yield session
             except Exception:
-                session.rollback()
+                await session.rollback()
                 raise
             finally:
-                session.close()
+                await session.close()

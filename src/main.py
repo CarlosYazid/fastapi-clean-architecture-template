@@ -15,7 +15,7 @@ class AppCreator:
             openapi_url=f"{get_settings().API}/openapi.json",
             version="0.0.1",
         )
-        
+
         add_pagination(self.app)
 
         # set db and container
