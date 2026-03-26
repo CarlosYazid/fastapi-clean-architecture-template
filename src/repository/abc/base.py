@@ -68,10 +68,7 @@ class BaseRepository:
 
         async with self.session_factory() as session:
             result = await session.exec(
-                update(self.model)
-                .where(self.model.id == id)
-                .values(**{column: value})
-                .returning(self.model)
+                update(self.model).where(self.model.id == id).values(**{column: value}).returning(self.model)
             )
 
             updated = result.first()

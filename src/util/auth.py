@@ -10,9 +10,7 @@ class AuthUtils:
     @staticmethod
     def create_access_token(subject: dict) -> Tuple[str, str]:
 
-        expire = datetime.now() + timedelta(
-            minutes=get_settings().ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = datetime.now() + timedelta(minutes=get_settings().ACCESS_TOKEN_EXPIRE_MINUTES)
 
         payload = {"exp": expire, **subject}
         encoded_jwt = jwt.encode(

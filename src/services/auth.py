@@ -23,9 +23,7 @@ class AuthService(BaseService):
 
         user_info = UserRead(**user.model_dump())
 
-        access_token, expiration_datetime = AuthUtils.create_access_token(
-            user_info.dict()
-        )
+        access_token, expiration_datetime = AuthUtils.create_access_token(user_info.dict())
 
         return SignInResponse(
             access_token=access_token,
@@ -35,9 +33,7 @@ class AuthService(BaseService):
 
     async def sign_up(self, user_info: SignUp) -> User:
 
-        user = User(
-            **user_info.dict(exclude_none=True), is_active=True, is_superuser=False
-        )
+        user = User(**user_info.dict(exclude_none=True), is_active=True, is_superuser=False)
 
         user.password = AuthUtils.get_password_hash(user_info.password)
 
