@@ -72,6 +72,7 @@ Template base de FastAPI con arquitectura limpia, lista para producción y actua
 │   ├── unit_tests/
 │   └── test_data/
 ├── alembic.ini
+├── Dockerfile
 └── pyproject.toml
 ```
 
