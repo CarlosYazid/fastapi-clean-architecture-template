@@ -1,6 +1,6 @@
 [project]
 name = "FastAPI-Clean-Architecture-Template"
-version = "0.1.0"
+version = "0.1.1"
 description = "Base template for apis"
 readme = "../README.md"
 requires-python = ">=3.13"
@@ -20,6 +20,29 @@ dependencies = [
     "pydantic[email]>=2.12.5",
     "pyjwt>=2.12.1",
     "sqlmodel>=0.0.37",
+
+    # -----------------------------------------------------------------------
+    # Constraints de seguridad
+    # -----------------------------------------------------------------------
+
+    # alembic → mako
+    # CVE-2026-44307 (HIGH)   fix: 1.3.12  path traversal en TemplateLookup (Windows)
+    # CVE-2026-41205 (MEDIUM) fix: 1.3.11  information disclosure via path traversal
+    "mako>=1.3.12",
+
+    # fastapi-querybuilder → poetry → cachecontrol → requests → urllib3
+    # fastapi-querybuilder → poetry → dulwich → urllib3
+    # CVE-2026-44431 (HIGH) fix: 2.7.0
+    # CVE-2026-44432 (HIGH) fix: 2.7.0
+    "urllib3>=2.7.0",
+
+    # fastapi-querybuilder → poetry
+    # CVE-2026-34591 (HIGH) fix: 2.3.3  arbitrary file write via crafted package
+    # CVE-2026-41140 (LOW)  fix: 2.3.4  path traversal / arbitrary file write
+    "poetry>=2.3.4",
+
+    # argon2-cffi / pyjwt → cryptography (indirecta a través del sistema)
+    # "cryptography>=46.0.7",
 ]
 
 [dependency-groups]
@@ -27,12 +50,23 @@ dev = [
     "aiofiles>=25.1.0",
     "anyio>=4.13.0",
     "httpx>=0.28.1",
-    "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-trio>=0.8.0",
     "ruff>=0.15.7",
     "uvicorn>=0.42.0",
+
+    # -----------------------------------------------------------------------
+    # Constraints de seguridad
+    # -----------------------------------------------------------------------
+
+    # CVE-2025-71176 (MEDIUM) fix: 9.0.3  DoS / privilege escalation via tmp dir inseguro
+    "pytest>=9.0.3",
+
+    # pytest → pygments
+    # CVE-2026-4539 (LOW) fix: 2.20.0  ReDoS en AdlLexer
+    "pygments>=2.20.0",
 ]
+
 optional = [
     "pymysql>=1.1.2",
 ]
