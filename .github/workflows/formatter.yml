@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-         ref: ${{ github.event.pull_request.head.sha || github.ref }}
+         ref: ${{ github.event.pull_request.head.sha || github.ref_name || github.sha }}
          fetch-depth: 0
 
       - name: Install uv
