@@ -1,3 +1,6 @@
+src/.venv/
+.venv/
+
 # Python specific files
 **/__pycache__
 *.pyc
