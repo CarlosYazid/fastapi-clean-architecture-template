@@ -1,5 +1,5 @@
 # / -- base image -- /
-FROM python:3.13-slim AS base
+FROM python:3.13-slim-bookworm AS base
 
 # FIX: Ejecutar apt-get update + upgrade en el mismo RUN para aplicar
 # los parches de seguridad disponibles del OS (sed, openssl, zlib, etc.)
